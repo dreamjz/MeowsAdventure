@@ -1,11 +1,14 @@
 package internal
 
+import (
+	"github.com/hajimehoshi/ebiten/v2"
+	"image"
+)
+
 const (
-	frameWidth    = 19
-	frameHeight   = 17
-	runFrameCount = 4
-	frame0X       = 0
-	frame0Y       = 0
+	catRunCnt    = 4
+	catRunWidth  = 20
+	catRunHeight = 17
 )
 
 type Player struct {
@@ -24,9 +27,28 @@ type Player struct {
 	climbingSpeed int
 	climbing      bool
 	touchingVine  bool
+	spawnLocation [][]int
 }
 
-func (p *Player) Draw() {
-	//aniSpeed := p.game.count / 5 // 12 FPS
+func initPlayer(g *Game) *Player {
+	return &Player{
+		game:   g,
+		facing: 1,
+	}
+}
 
+func (p *Player) Draw(screen *ebiten.Image) {
+	opt := &ebiten.DrawImageOptions{}
+	opt.GeoM.Scale(float64(p.facing), 1)
+	opt.GeoM.Translate(32, 320)
+	playAni(screen, p.game.sprites["cat_run"].img, opt, catRunWidth, catRunHeight, catRunCnt, p.game.count)
+}
+
+func playAni(screen, img *ebiten.Image, opt *ebiten.DrawImageOptions, imgWidth, imgHeight, imgCnt, frameCnt int) {
+	i := (frameCnt / 5) % imgCnt
+	x0 := 0
+	y0 := i * imgHeight
+	x1 := x0 + imgWidth
+	y1 := y0 + imgHeight
+	screen.DrawImage(img.SubImage(image.Rect(x0, y0, x1, y1)).(*ebiten.Image), opt)
 }

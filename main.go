@@ -7,8 +7,9 @@ import (
 )
 
 func main() {
-	ebiten.SetWindowSize(1920, 1080)
+	ebiten.SetWindowSize(internal.ScreenWidth, internal.ScreenHeight)
 	ebiten.SetWindowTitle("Hello, World!")
+	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 
 	game := &internal.Game{}
 	err := game.Init()

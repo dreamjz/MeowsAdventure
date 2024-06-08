@@ -53,13 +53,10 @@ func initMap(name string, g *Game) (*Map, error) {
 
 func (m *Map) Draw(screen *ebiten.Image) error {
 	for i, n := range m.info.Data {
-		var si string
-		switch v := m.info.Sprites[n].(type) {
-		case string:
-			si = v
-		default:
+		if n == 0 {
 			continue
 		}
+		si := m.info.Sprites[n].(string)
 		spInfo := parseSpriteInfo(si)
 		spInfo.width = m.info.BlockWidth
 		spInfo.height = m.info.BlockHeight
@@ -68,10 +65,9 @@ func (m *Map) Draw(screen *ebiten.Image) error {
 			return fmt.Errorf("failed to get sprite: %w", err)
 		}
 		x0 := i % m.info.Width * m.info.BlockWidth
-		y0 := (m.info.Height - i/m.info.Width) * m.info.BlockHeight
+		y0 := (m.info.Height - i/m.info.Width - 1) * m.info.BlockHeight
 		opt := &ebiten.DrawImageOptions{}
-		opt.GeoM.Translate(float64(x0), float64(y0))
-		opt.GeoM.Scale(1.8, 1.8)
+		opt.GeoM.Translate(float64(x0), float64(y0)-128)
 		screen.DrawImage(s, opt)
 	}
 	return nil

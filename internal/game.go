@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	spritePath = "assets/sprite"
-	mapPath    = "assets/map"
+	ScreenWidth  = 640
+	ScreenHeight = 384
+	spritePath   = "assets/sprite"
+	mapPath      = "assets/map"
 )
 
 type Game struct {
@@ -31,10 +33,17 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if err != nil {
 		ebitenutil.DebugPrint(screen, err.Error())
 	}
+
+	g.player.Draw(screen)
+
+	msg := fmt.Sprintf(`TPS: %0.2f
+FPS: %0.2f
+`, ebiten.ActualTPS(), ebiten.ActualFPS())
+	ebitenutil.DebugPrint(screen, msg)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
-	return 1920, 1080
+	return ScreenWidth, ScreenHeight
 }
 
 func (g *Game) Init() error {
@@ -70,5 +79,8 @@ func (g *Game) Init() error {
 		g.maps[mapName] = m
 	}
 
+	// init player
+	p := initPlayer(g)
+	g.player = p
 	return nil
 }
