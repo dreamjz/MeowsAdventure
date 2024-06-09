@@ -25,6 +25,7 @@ type Game struct {
 
 func (g *Game) Update() error {
 	g.count++
+	g.player.Update()
 	return nil
 }
 
@@ -35,7 +36,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	g.player.Draw(screen)
-
 	msg := fmt.Sprintf(`TPS: %0.2f
 FPS: %0.2f
 `, ebiten.ActualTPS(), ebiten.ActualFPS())
